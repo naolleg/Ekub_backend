@@ -13,11 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum GENDER {
-  MALE
-  FEMALE
-}
-
 enum ROLE{
 ADMIN
 USER
@@ -28,6 +23,12 @@ enum STATUS{
   DEACTIVATED
   PENDING
 }
+
+enum GENDER {
+  MALE
+  FEMALE
+}
+
 model Users{
 
  id        Int      @id @default(autoincrement())
@@ -44,24 +45,23 @@ model Users{
   deposits  Deposits[]
   lots      Lots[]
   profile   Profile?
-
+  winners       Winners[]
 
 }
-model Profile{
 
-  id        Int       @id @default(autoincrement())
-  lotId     Int       @unique
-  userId    Int       @unique
-  firstName String
-  middleName String
-  lastName  String
-  gender    GENDER
-  createdAt DateTime  @default(now())
-  lot       Lots       @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
-  user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade ) 
-  address  address[]
+model category{
+ id           Int       @id @default(autoincrement())
+  name         String
+  amount       Decimal
+  commission    Decimal
+  createdAt    DateTime  @default(now())
+  totalCount   Int
+  totalAmount  Decimal
+  totalCommition Decimal
+  lot          Lots[]
+  deposit      Deposits[]
+
 }
-
 
 model Lots{
 
@@ -80,21 +80,30 @@ model Lots{
   winners       Winners?
 }
 
+model Profile{
 
-
-model category{
- id           Int       @id @default(autoincrement())
-  name         String
-  amount       Decimal
-  commission    Decimal
-  createdAt    DateTime  @default(now())
-  totalCount   Int
-  totalAmount  Decimal
-  totalCommition Decimal
-  lot          Lots[]
-  deposit      Deposits[]
-
+  id        Int       @id @default(autoincrement())
+  lotId     Int       @unique
+  userId    Int       @unique
+  firstName String
+  middleName String
+  lastName  String
+  gender    GENDER
+  createdAt DateTime  @default(now())
+  lot       Lots       @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
+  user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade ) 
+  address  address[]
 }
+model address{
+  id   Int       @id @default(autoincrement())
+  profileId      Int
+  city String
+  subcity String
+  werede String
+  housenumber Int
+  profile      Profile      @relation(fields: [profileId], references: [id] ,onDelete: Cascade )
+}
+
 
 model Deposits {
   id        Int       @id @default(autoincrement())
@@ -125,14 +134,6 @@ model Winners {
   lotId        Int       @unique
   registeredBy Int
   createdAt    DateTime  @default(now())
+  user          Users      @relation(fields: [registeredBy], references: [id] ,onDelete: Cascade )
   lot          Lots       @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
-}
-model address{
-  id   Int       @id @default(autoincrement())
-  profileId      Int
-  city String
-  subcity String
-  werede String
-  housenumber Int
-  profile      Profile      @relation(fields: [profileId], references: [id] ,onDelete: Cascade )
 }
