@@ -92,6 +92,7 @@ model Profile{
   middleName String
   lastName  String
   gender    GENDER
+  image_url String
   createdAt DateTime  @default(now())
   lot       Lots       @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade ) 
