@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { HOST, PORT } from './config/secrets.js';
+import { HOST, PORT } from './src/config/secrets.js';
 
 
 const app = express();

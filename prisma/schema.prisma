@@ -103,7 +103,7 @@ model address{
   profileId      Int
   city String
   subcity String
-  werede String
+  wereda String
   housenumber Int
   profile      Profile      @relation(fields: [profileId], references: [id] ,onDelete: Cascade )
 }
