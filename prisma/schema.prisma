@@ -40,7 +40,10 @@ model Users{
   firstName String
   middleName String
   lastName  String
-  activeStatus STATUS @default(ACTIVE)  
+  activeStatus STATUS @default(ACTIVE)
+  otp String?
+  otpCreatedAt DateTime? @default(now())
+  otpExpiry DateTime? @default(now())  
   loans     Loans[]
   deposits  Deposits[]
   lots      Lots[]
