@@ -4,9 +4,11 @@ import { prisma } from "../../config/prisma.js";
 
 const categoryController={
     register: async(req: Request,res: Response,next: NextFunction)=>{
+        console.log("JKHJDSDSJ");
+        
         const data = categorySchema.register.parse(req.body);
         const commission=req.body.amount*0.1;
-        const totalAmount= req.body.totalCount* (req.body.amount +req.body.commission);
+        const totalAmount= req.body.totalCount* (req.body.amount +commission);
         const totalCommission=commission*req.body.totalCount
         const newCategory = await prisma.category.create({
             data:{

@@ -7,7 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "distt" // Specify the output directory for compiled JavaScript files
+    "outDir": "dist" // Specify the output directory for compiled JavaScript files
   },
   "include": [
     "./src/**/*",
