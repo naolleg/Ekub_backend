@@ -5,16 +5,17 @@ import { prisma } from "../../config/prisma.js";
 const categoryController={
     register: async(req: Request,res: Response,next: NextFunction)=>{
         const data = categorySchema.register.parse(req.body);
-        req.body.totalAmount= req.body.totalCount* (req.body.amount +req.body.commission);
-        req.body.totalAmount=req.body.totalCount*req.body.commission;
+        const commission=req.body.amount*0.1;
+        const totalAmount= req.body.totalCount* (req.body.amount +req.body.commission);
+        const totalCommission=commission*req.body.totalCount
         const newCategory = await prisma.category.create({
             data:{
                 name: data.name,
                 amount: data.amount,
-                commission: data.commition,
+                commission: commission,
                 totalCount: req.body.totalCount,
-                totalAmount: req.body.totalAmount,
-                totalCommition: req.body.totalCommition,
+                totalAmount: totalAmount,
+                totalCommition: totalCommission,
             }
         });
         return res.status(200).json({

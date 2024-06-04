@@ -60,7 +60,7 @@ model category{
   createdAt    DateTime  @default(now())
   totalCount   Int
   totalAmount  Decimal
-  totalCommition Decimal
+  totalCommission Decimal
   lot          Lots[]
   deposit      Deposits[]
 
