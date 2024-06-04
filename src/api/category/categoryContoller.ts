@@ -27,8 +27,13 @@ const categoryController={
         })
     },
     update: async(req: Request,res: Response,next: NextFunction)=>{
+        console.log("kdxn");
+        
         const id = req.params.id;
         const data = categorySchema.update.parse(req.body);
+        const commission=req.body.amount*0.1;
+            const totalAmount= req.body.totalCount* (req.body.amount +commission);
+            const totalCommission=commission*req.body.totalCount
         const categoryExist = await prisma.category.findFirst({where:{
             id: +id,
         }})
@@ -42,15 +47,16 @@ const categoryController={
         const updateCategory = await prisma.category.update({
             where:{
                 id: +id,
-            },
-            data:{
-                name: data.name,
-                amount: data.amount,
-                commission: data.commition,
-                totalCount: req.body.totalCount,
-                totalAmount: req.body.totalAmount,
-                totalCommition: req.body.totalCommition,
-            }
+            },     
+         
+                data:{
+                    name: data.name,
+                    amount: data.amount,
+                    commission: commission,
+                    totalCount: req.body.totalCount,
+                    totalAmount: totalAmount,
+                    totalCommition: totalCommission,
+                }
         });
 
         return res.status(200).json({
@@ -59,6 +65,17 @@ const categoryController={
             data: updateCategory
         })
     },
+    getAll:async(req: Request,res: Response,next: NextFunction)=>{
+
+        try {
+            const category= await prisma.category.findMany()
+            res.status(200).json({ success: true,
+              message: "all category",category});
+          } catch (error) {
+            throw(error);
+          }
+        },
+
     delete: async(req: Request,res: Response,next: NextFunction)=>{
         const id = req.params.id;
         const categoryExist = await prisma.category.findFirst({where:{
@@ -79,9 +96,9 @@ const categoryController={
         return res.status(200).json({
             success: true,
             message: 'category deleted sucessfully',
+            data:deletedCategory
         })
     },
 
 }
-
 export default categoryController;
