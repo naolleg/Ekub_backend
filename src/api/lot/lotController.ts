@@ -34,7 +34,7 @@ const lotController={
                             create:{
                                city:data.city,
                                subcity:data.subcity, 
-                               werede:data.woreda,
+                               wereda:data.woreda,
                                housenumber:data.housenumber
                             }
                         }

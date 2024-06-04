@@ -8,5 +8,5 @@ userRouter.post('/login',errorHandler(userController.login));
 userRouter.post('/change-password',errorHandler(userController.changePassword));
 userRouter.put('/reset-password/:id',errorHandler(userController.resetPassword));
 userRouter.put('/change-status/:id',errorHandler(userController.changeStatus));
-userRouter.post('/',errorHandler(userController.register));
+userRouter.post('/register',errorHandler(userController.register));
 export default userRouter;

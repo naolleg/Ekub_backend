@@ -86,7 +86,7 @@ model Lots{
 model Profile{
 
   id        Int       @id @default(autoincrement())
-  lotId     Int       @unique
+  lotId     Int?       @unique
   userId    Int       @unique
   firstName String
   middleName String
@@ -94,7 +94,7 @@ model Profile{
   gender    GENDER
   image_url String
   createdAt DateTime  @default(now())
-  lot       Lots       @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
+  lot       Lots ?      @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade ) 
   address  address[]
 }
@@ -111,14 +111,14 @@ model address{
 
 model Deposits {
   id        Int       @id @default(autoincrement())
-  lotId     Int
+  lotId     Int?
   userId    Int
   catgoryId  Int
   amount    Decimal
   remaining Decimal
   createdAt DateTime  @default(now())
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade )
-  lot       Lots       @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
+  lot       Lots ?      @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
   category   category   @relation(fields: [catgoryId], references: [id] ,onDelete: Cascade)
 }
 

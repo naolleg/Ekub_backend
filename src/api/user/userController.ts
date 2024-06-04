@@ -8,48 +8,70 @@ import { SECRET } from "../../config/secrets.js";
 import { generatePassword } from "../../util/generateor.js"
 import { sendEmail } from "../../util/emailSender.js";
 
-const userController = {
-  register: async (req: Request, res: Response, next: NextFunction) => {
-    const data = userSchema.register.parse(req.body);
-    //check if the email  exist
-    const isUserExist = await prisma.users.findFirst({
-      where: {
-        email: req.body.email,
-      },
+const userController = {register: async (req: Request, res: Response, next: NextFunction) => {
+  const data = userSchema.register.parse(req.body);
+  //check if the email exists
+  const isUserExist = await prisma.users.findFirst({
+    where: {
+      email: req.body.email,
+    },
+  });
+  if (isUserExist) {
+    return res.status(404).json({
+      success: false,
+      message: "Email is already in use",
     });
-    if (isUserExist) {
-      return res.status(404).json({
-        success: false,
-        message: "email is used before",
-      });
+  }
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+
+  const newUser = await prisma.users.create({
+    data: {
+      email: data.email,
+      firstName: data.firstName,
+      middleName: data.middleName,
+      lastName: data.lastName,
+      password: hashedPassword,
+      activeStatus: STATUS.ACTIVE,
+      profile:{
+        create:{
+            firstName: data.firstName,
+            middleName: data.middleName,
+            lastName: data.lastName,
+            gender: data.gender,
+            image_url:data.image_url,
+            address:{
+                create:{
+                   city:data.city,
+                   subcity:data.subcity, 
+                   wereda:data.woreda,
+                   housenumber:data.housenumber
+                }
+            }
+        }
     }
-    const password = bcrypt.genSaltSync(10, req.body.password);
+    },
+  });
 
-    const newUser = await prisma.users.create({
-      data: {
-        email: data.email,
-        firstName: data.firstName,
-        middleName: data.middleName,
-        lastName: data.lastName,
-        password: password,
-        activeStatus: STATUS.ACTIVE,
-      },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "user created successfully",
-      data: newUser,
-    });
-  },
+  return res.status(200).json({
+    success: true,
+    message: "User created successfully",
+    data: newUser,
+  });
+},
+  
 
   login: async (req: Request, res: Response, next: NextFunction) => {
     const data = userSchema.login.parse(req.body);
+    console.log("sdfvsf");
+    
     const user = await prisma.users.findFirst({
       where: {
         email: data.email,
       },
     });
+   
+    
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -69,10 +91,14 @@ const userController = {
         message: "user is not active",
       });
     }
+    console.log(user);
+    
     const payload = {
       id: user.id,
       firstName: user.firstName,
     };
+    console.log("kdajkn");
+    
     const token = await jwt.sign(payload, SECRET!);
 
     return res.status(200).json({
