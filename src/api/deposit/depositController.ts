@@ -7,8 +7,8 @@ const depositController={
         const data = depositSchema.register.parse(req.body);
         const newDeposit = await prisma.deposits.create({
          data:{
-            catgoryId:req.category!.id,
              amount: +data.amount,
+            
              remaining: +data.remaining,
              userId: +req.user!.id,
              lotId: +data.lotId, 
@@ -42,7 +42,8 @@ const depositController={
             },
             data:{
                 amount: +data.amount!,
-                 remaining: +data.remaining!
+                commition: +data.commition!,
+                remaining: +data.remaining!
             }
         });
 

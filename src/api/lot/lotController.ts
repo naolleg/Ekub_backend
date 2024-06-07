@@ -29,13 +29,11 @@ const lotController={
                         lastName: data.lastName,
                         gender: data.gender,
                         userId: req.user!.id,
-                        image_url:data.image_url,
                         address:{
                             create:{
                                city:data.city,
                                subcity:data.subcity, 
                                wereda:data.woreda,
-                               housenumber:data.housenumber
                             }
                         }
                     }

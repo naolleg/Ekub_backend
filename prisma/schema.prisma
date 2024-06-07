@@ -40,6 +40,7 @@ model Users{
   firstName String
   middleName String
   lastName  String
+  gender     GENDER
   activeStatus STATUS @default(ACTIVE)
   otp String?
   otpCreatedAt DateTime? @default(now())
@@ -47,7 +48,6 @@ model Users{
   loans     Loans[]
   deposits  Deposits[]
   lots      Lots[]
-  profile   Profile?
   winners       Winners[]
 
 }
@@ -63,12 +63,12 @@ model category{
   totalCommission Decimal
   lot          Lots[]
   deposit      Deposits[]
-
+  
 }
 
 model Lots{
-
  id            Int       @id @default(autoincrement())
+ depositId      Int
   categoryId    Int 
   registeredBy  Int
   isCompleted   Boolean
@@ -79,7 +79,7 @@ model Lots{
   category      category   @relation(fields: [categoryId], references: [id] ,onDelete: Cascade )
   profile       Profile?
   loans         Loans[]
-  deposits      Deposits[]
+  deposits      Deposits  @relation(fields: [depositId ], references: [id] ,onDelete: Cascade )
   winners       Winners?
 }
 
@@ -92,10 +92,8 @@ model Profile{
   middleName String
   lastName  String
   gender    GENDER
-  image_url String
   createdAt DateTime  @default(now())
   lot       Lots ?      @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
-  user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade ) 
   address  address[]
 }
 model address{
@@ -104,22 +102,21 @@ model address{
   city String
   subcity String
   wereda String
-  housenumber Int
   profile      Profile      @relation(fields: [profileId], references: [id] ,onDelete: Cascade )
 }
 
 
 model Deposits {
   id        Int       @id @default(autoincrement())
-  lotId     Int?
   userId    Int
   catgoryId  Int
   amount    Decimal
   remaining Decimal
   createdAt DateTime  @default(now())
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade )
-  lot       Lots ?      @relation(fields: [lotId], references: [id] ,onDelete: Cascade )
+  lot       Lots[]
   category   category   @relation(fields: [catgoryId], references: [id] ,onDelete: Cascade)
+
 }
 
 

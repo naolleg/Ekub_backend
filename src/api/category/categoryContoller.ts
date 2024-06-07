@@ -7,17 +7,16 @@ const categoryController={
         console.log("JKHJDSDSJ");
         
         const data = categorySchema.register.parse(req.body);
-        const commission=req.body.amount*0.1;
-        const totalAmount= req.body.totalCount* (req.body.amount +commission);
-        const totalCommission=commission*req.body.totalCount
+        const totalAmount= req.body.totalCount* (req.body.amount);
+        const totalCommission=req.body.commision*req.body.totalCount
         const newCategory = await prisma.category.create({
             data:{
                 name: data.name,
                 amount: data.amount,
-                commission: commission,
+                commission: req.body.commission,
                 totalCount: req.body.totalCount,
                 totalAmount: totalAmount,
-                totalCommition: totalCommission,
+                totalCommission: totalCommission,
             }
         });
         return res.status(200).json({
@@ -27,13 +26,10 @@ const categoryController={
         })
     },
     update: async(req: Request,res: Response,next: NextFunction)=>{
-        console.log("kdxn");
-        
         const id = req.params.id;
         const data = categorySchema.update.parse(req.body);
-        const commission=req.body.amount*0.1;
-            const totalAmount= req.body.totalCount* (req.body.amount +commission);
-            const totalCommission=commission*req.body.totalCount
+            const totalAmount= req.body.totalCount* req.body.amount;
+            const totalCommission=req.body.commission*req.body.totalCount
         const categoryExist = await prisma.category.findFirst({where:{
             id: +id,
         }})
@@ -52,10 +48,10 @@ const categoryController={
                 data:{
                     name: data.name,
                     amount: data.amount,
-                    commission: commission,
+                    commission: req.body.commission,
                     totalCount: req.body.totalCount,
                     totalAmount: totalAmount,
-                    totalCommition: totalCommission,
+                    totalCommission: totalCommission,
                 }
         });
 
