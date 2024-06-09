@@ -4,17 +4,15 @@ import { GENDER } from '@prisma/client';
 export const lotSchema = {
   register: z.object({
     categoryId: z.number().int().positive(),
-    remaingDay: z.number().int().positive(),
-    remaingAmount: z.number().positive(),
+    // remaingDay: z.number().int().positive(),
+    // remaingAmount: z.number().positive(),
     firstName: z.string().min(1).max(255),
     middleName: z.string().min(1).max(255),
     lastName: z.string().min(1).max(255),
     gender: z.nativeEnum(GENDER),
-    image_url:z.string(),
     subcity: z.string().min(1).max(255),
-    woreda: z.string().min(1).max(255),
+    wereda: z.string().min(1).max(255),
     city: z.string().min(1).max(255),
-    housenumber: z.number().int().positive(),
 
   }),
   update: z.object({

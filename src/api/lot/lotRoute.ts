@@ -3,7 +3,7 @@ import errorHandler from "../../middlewares/error.js";
 import lotController from "./lotController.js";
 const lotRouter = Router();
 lotRouter.put('/profile',errorHandler(lotController.updateProfile));
-lotRouter.post('/',errorHandler(lotController.register));
+lotRouter.post('/register',errorHandler(lotController.register));
 lotRouter.put('/:id',errorHandler(lotController.update));
 lotRouter.delete('/:id',errorHandler(lotController.delete));
 

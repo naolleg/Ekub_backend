@@ -5,6 +5,8 @@ import { url } from "inspector";
 
 const lotController={
     register: async(req: Request,res: Response,next: NextFunction)=>{
+        console.log("wfedc");
+        
         const data = lotSchema.register.parse(req.body);
         const categoryExist = await prisma.category.findFirst({where:{
             id: +data.categoryId,
@@ -15,11 +17,13 @@ const lotController={
                 message: "category not found"
             })
         }
+        console.log(categoryExist);
+        
         const newLot = await prisma.lots.create({
             data:{
                 isCompleted: false,
                 categoryId: data.categoryId,
-                registeredBy: req.user!.id,
+                registeredBy: req.user?.id,
                 remaingDay: +categoryExist.totalCount,
                 remaingAmount: +categoryExist.totalAmount,
                 profile:{
@@ -33,7 +37,7 @@ const lotController={
                             create:{
                                city:data.city,
                                subcity:data.subcity, 
-                               wereda:data.woreda,
+                               wereda:data.wereda,
                             }
                         }
                     }

@@ -8,7 +8,7 @@ const categoryController={
         
         const data = categorySchema.register.parse(req.body);
         const totalAmount= req.body.totalCount* (req.body.amount);
-        const totalCommission=req.body.commision*req.body.totalCount
+        const totalCommission=req.body.commission*req.body.totalCount
         const newCategory = await prisma.category.create({
             data:{
                 name: data.name,

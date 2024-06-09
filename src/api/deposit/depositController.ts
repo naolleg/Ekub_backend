@@ -3,24 +3,48 @@ import { depositSchema } from "./depositSchema.js";
 import { prisma } from "../../config/prisma.js";
 
 const depositController={
-    register: async(req: Request,res: Response,next: NextFunction)=>{
+    register: async (req: Request, res: Response, next: NextFunction) => {
         const data = depositSchema.register.parse(req.body);
         const newDeposit = await prisma.deposits.create({
-         data:{
-             amount: +data.amount,
-            
-             remaining: +data.remaining,
-             userId: +req.user!.id,
-             lotId: +data.lotId, 
-         }
-        })
-
+          data: {
+            amount: +data.amount,
+            remaining: +data.remaining,
+            userId: +req.user!.id,
+             
+          },
+        });
+      
+        // Get the related Lot
+        const lot = await prisma.lots.findFirst({
+          where: {
+            id: data.lotId, // assuming lotId is provided in the request body
+          },
+        });
+      
+        if (!lot) {
+          return res.status(404).json({
+            success: false,
+            message: 'Lot not found',
+          });
+        }
+      
+        // Update the remaining amount and remaining day in the Lot
+        await prisma.lots.update({
+          where: {
+            id: lot.id,
+          },
+          data: {
+            remaingAmount: lot.remaingAmount - newDeposit.amount,
+            remaingDay: lot.remaingDay - 1, // assuming 1 day is deducted for each deposit
+          },
+        });
+      
         return res.status(200).json({
-            success: true,
-            message: 'register deposit',
-            data: newDeposit
-        })
-    },
+          success: true,
+          message: 'egister deposit',
+          data: newDeposit,
+        });
+      },
     update: async(req: Request,res: Response,next: NextFunction)=>{
         const data = depositSchema.update.parse(req.body);
         const id = req.params.id;

@@ -68,10 +68,9 @@ model category{
 
 model Lots{
  id            Int       @id @default(autoincrement())
- depositId      Int
   categoryId    Int 
   registeredBy  Int
-  isCompleted   Boolean
+  isCompleted   Boolean   @default(false)
   createdAt     DateTime  @default(now())
   remaingDay    Int
   remaingAmount Decimal
@@ -79,7 +78,6 @@ model Lots{
   category      category   @relation(fields: [categoryId], references: [id] ,onDelete: Cascade )
   profile       Profile?
   loans         Loans[]
-  deposits      Deposits  @relation(fields: [depositId ], references: [id] ,onDelete: Cascade )
   winners       Winners?
 }
 
@@ -114,7 +112,6 @@ model Deposits {
   remaining Decimal
   createdAt DateTime  @default(now())
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade )
-  lot       Lots[]
   category   category   @relation(fields: [catgoryId], references: [id] ,onDelete: Cascade)
 
 }

@@ -8,7 +8,8 @@ import { SECRET } from "../../config/secrets.js";
 import { generatePassword } from "../../util/generateor.js"
 import { sendEmail } from "../../util/emailSender.js";
 
-const userController = {register: async (req: Request, res: Response, next: NextFunction) => {
+const userController = {
+  register: async (req: Request, res: Response, next: NextFunction) => {
   const data = userSchema.register.parse(req.body);
   //check if the email exists
   const isUserExist = await prisma.users.findFirst({
