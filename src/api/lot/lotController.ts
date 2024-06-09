@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { lotSchema } from "./lotSchema.js";
 import { prisma } from "../../config/prisma.js";
 import { url } from "inspector";
+import { nullable } from "zod";
 
 const lotController={
     register: async(req: Request,res: Response,next: NextFunction)=>{
@@ -23,7 +24,7 @@ const lotController={
             data:{
                 isCompleted: false,
                 categoryId: data.categoryId,
-                registeredBy: req.user?.id,
+                registeredBy: req.user!.id ,  
                 remaingDay: +categoryExist.totalCount,
                 remaingAmount: +categoryExist.totalAmount,
                 profile:{
@@ -44,6 +45,7 @@ const lotController={
                 }
             }
         });
+
 
         return res.status(200).json({
             success: true,
@@ -116,6 +118,7 @@ const lotController={
                 lastName: data.lastName,
                 gender: data.gender,
                 userId: req.user!.id,
+              
             }
         });
         
@@ -128,6 +131,8 @@ const lotController={
         })
     },
     delete: async(req: Request,res: Response,next: NextFunction)=>{
+        console.log("dsjhfbc ");
+        
         const id = req.params.id;
         const isLotExist = await prisma.lots.findFirst({
             where: {

@@ -25,10 +25,5 @@ export const lotSchema = {
     middleName: z.string().min(1).max(255).optional(),
     lastName: z.string().min(1).max(255).optional(),
     gender: z.nativeEnum(GENDER).optional(),
-    image_url:z.string(),
-    subcity: z.string().min(1).max(255),
-    woreda: z.string().min(1).max(255),
-    city: z.string().min(1).max(255),
-    housenumber: z.number().int().positive(),
   }),
 };

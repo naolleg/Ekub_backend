@@ -5,15 +5,29 @@ import { prisma } from "../../config/prisma.js";
 const depositController={
     register: async (req: Request, res: Response, next: NextFunction) => {
         const data = depositSchema.register.parse(req.body);
+        const categoryExist = await prisma.category.findFirst({where:{
+          id: +data.catgoryId,
+      }})
+      if(!categoryExist){
+          return res.status(404).json({
+              success: false,
+              message: "category not found"
+          })
+      }
         const newDeposit = await prisma.deposits.create({
-          data: {
-            amount: +data.amount,
-            remaining: +data.remaining,
-            userId: +req.user!.id,
-             
-          },
-        });
-      
+    data:{                               
+         userId:req.user!.id,
+         amount:categoryExist.amount,
+         commission:categoryExist.commission,
+         remaining:data.remaining,
+         lotId:data.lotId,
+         catgoryId:data.catgoryId
+
+}
+     })
+        
+        console.log("dgrgbdfvc");
+        
         // Get the related Lot
         const lot = await prisma.lots.findFirst({
           where: {
@@ -28,16 +42,17 @@ const depositController={
           });
         }
       
-        // Update the remaining amount and remaining day in the Lot
+        
         await prisma.lots.update({
           where: {
             id: lot.id,
           },
           data: {
-            remaingAmount: lot.remaingAmount - newDeposit.amount,
-            remaingDay: lot.remaingDay - 1, // assuming 1 day is deducted for each deposit
+            remaingAmount: +lot.remaingAmount - +newDeposit.amount,
+            remaingDay: lot.remaingDay - 1,
           },
         });
+      console.log(lot);
       
         return res.status(200).json({
           success: true,
@@ -66,7 +81,7 @@ const depositController={
             },
             data:{
                 amount: +data.amount!,
-                commition: +data.commition!,
+                commission: +data.commition!,
                 remaining: +data.remaining!
             }
         });

@@ -79,13 +79,14 @@ model Lots{
   profile       Profile?
   loans         Loans[]
   winners       Winners?
+  deposit       Deposits[]
 }
 
 model Profile{
 
   id        Int       @id @default(autoincrement())
   lotId     Int?       @unique
-  userId    Int       @unique
+  userId    Int       
   firstName String
   middleName String
   lastName  String
@@ -108,12 +109,14 @@ model Deposits {
   id        Int       @id @default(autoincrement())
   userId    Int
   catgoryId  Int
+  lotId      Int
   amount    Decimal
+  commission  Decimal
   remaining Decimal
   createdAt DateTime  @default(now())
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade )
   category   category   @relation(fields: [catgoryId], references: [id] ,onDelete: Cascade)
-
+  lots       Lots        @relation(fields: [lotId], references: [id] ,onDelete: Cascade)
 }
 
 

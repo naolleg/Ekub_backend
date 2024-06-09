@@ -1,10 +1,12 @@
 import { Router } from "express";
 import errorHandler from "../../middlewares/error.js";
+
 import lotController from "./lotController.js";
+import { isAuthUser } from "../../middlewares/auth.js";
 const lotRouter = Router();
-lotRouter.put('/profile',errorHandler(lotController.updateProfile));
-lotRouter.post('/register',errorHandler(lotController.register));
+lotRouter.post('/register',[isAuthUser],errorHandler(lotController.register));
+lotRouter.put('/update/:id',[isAuthUser],errorHandler(lotController.updateProfile));
 lotRouter.put('/:id',errorHandler(lotController.update));
-lotRouter.delete('/:id',errorHandler(lotController.delete));
+lotRouter.delete('/delete/:id',[isAuthUser],errorHandler(lotController.delete));
 
 export default lotRouter;

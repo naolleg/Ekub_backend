@@ -4,6 +4,6 @@ declare module 'express'{
    export interface Request {
       user?: Users
       category?:category
-     
+      lot?:Lots
    }
 }
