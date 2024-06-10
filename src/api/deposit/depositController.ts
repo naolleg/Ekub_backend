@@ -5,33 +5,9 @@ import { prisma } from "../../config/prisma.js";
 const depositController={
     register: async (req: Request, res: Response, next: NextFunction) => {
         const data = depositSchema.register.parse(req.body);
-        const categoryExist = await prisma.category.findFirst({where:{
-          id: +data.catgoryId,
-      }})
-      if(!categoryExist){
-          return res.status(404).json({
-              success: false,
-              message: "category not found"
-          })
-      }
-        const newDeposit = await prisma.deposits.create({
-    data:{                               
-         userId:req.user!.id,
-         amount:categoryExist.amount,
-         commission:categoryExist.commission,
-         remaining:data.remaining,
-         lotId:data.lotId,
-         catgoryId:data.catgoryId
-
-}
-     })
-        
-        console.log("dgrgbdfvc");
-        
-        // Get the related Lot
         const lot = await prisma.lots.findFirst({
           where: {
-            id: data.lotId, // assuming lotId is provided in the request body
+            id: data.lotId, 
           },
         });
       
@@ -42,21 +18,79 @@ const depositController={
           });
         }
       
+        const categoryExist = await prisma.category.findFirst({where:{
+          id: +data.catgoryId,
+      }})
+      if(!categoryExist){
+          return res.status(404).json({
+              success: false,
+              message: "category not found"
+          })
+      }
+      if (lot.isCompleted==true){
+        return res.status(404).json({
+          success: false,
+          message: "lot has completed depposit"
+      })
+  }
+  //this is for previous remaining to be put as unchangable input extract it from the privious lot deposit
+  const previousDeposit = await prisma.deposits.findFirst({
+    where: {
+      lotId: data.lotId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  let previousRemaining = 0;
+  if (previousDeposit) {
+    previousRemaining = +previousDeposit.remaining;
+  }
+      
+        const newDeposit = await prisma.deposits.create({
+    data:{
+                                     
+         userId:req.user!.id,
+         amount:categoryExist.amount,
+         commission:categoryExist.commission,
+         previousRemaining:previousRemaining,
+         remaining:data.remaining,
+         lotId:data.lotId,
+         catgoryId:data.catgoryId
+
+}
+     })
+        
+        console.log("dgrgbdfvc");
+        
+      
         
         await prisma.lots.update({
           where: {
             id: lot.id,
           },
           data: {
-            remaingAmount: +lot.remaingAmount - +newDeposit.amount,
+            remaingAmount: +lot.remaingAmount - (+newDeposit.amount),
             remaingDay: lot.remaingDay - 1,
           },
         });
+        if (+lot.remaingAmount - (+newDeposit.amount) <= 0) {
+          await prisma.lots.update({
+            where: {
+              id: lot.id,
+            },
+            data: {
+              isCompleted: true,
+            },
+          });
+        }
+      
       console.log(lot);
       
         return res.status(200).json({
           success: true,
-          message: 'egister deposit',
+          message: 'register deposited',
           data: newDeposit,
         });
       },

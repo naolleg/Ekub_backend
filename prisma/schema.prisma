@@ -113,6 +113,7 @@ model Deposits {
   amount    Decimal
   commission  Decimal
   remaining Decimal
+  previousRemaining Decimal?
   createdAt DateTime  @default(now())
   user      Users      @relation(fields: [userId], references: [id] ,onDelete: Cascade )
   category   category   @relation(fields: [catgoryId], references: [id] ,onDelete: Cascade)
