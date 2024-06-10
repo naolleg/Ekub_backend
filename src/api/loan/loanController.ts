@@ -34,9 +34,10 @@ const loanController={
               amount: true,
             },
           });
-      
+          const totalLoan:any=totalLoanAmount._sum.amount ?? 0 + +data.amount
+          const totalDeposit:any=totalDepositAmount._sum.amount 
           // Check if new loan amount + total loan amount exceeds half of total deposit amount
-          if (totalLoanAmount._sum.amount +data.amount > totalDepositAmount._sum.amount / 2) {
+          if (totalLoan > totalDeposit / 2) {
             return res.status(400).json({
               success: false,
               message: 'Loan amount exceeds half of total deposit amount',
@@ -55,7 +56,7 @@ const loanController={
           });
       const totalDeposit:any=totalDepositAmount._sum.amount;
           // Check if new loan amount exceeds half of total deposit amount
-          if (data.amount > loan/ 2) {
+          if (data.amount > totalDeposit/ 2) {
             return res.status(400).json({
               success: false,
               message: 'Loan amount exceeds half of total deposit amount',
