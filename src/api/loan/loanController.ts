@@ -11,6 +11,7 @@ const loanController={
             lotId: +data.lotId,
           },
         });
+     
       
         if (isLotExist) {
           // Calculate total loan amount taken by user for this lot
@@ -34,8 +35,13 @@ const loanController={
               amount: true,
             },
           });
-          const totalLoan:any=totalLoanAmount._sum.amount ?? 0 + +data.amount
+
+          const totalLoan: any = +(totalLoanAmount._sum.amount?? 0) + data.amount
           const totalDeposit:any=totalDepositAmount._sum.amount 
+          console.log(totalLoan);
+          console.log(totalDeposit);
+          
+          
           // Check if new loan amount + total loan amount exceeds half of total deposit amount
           if (totalLoan > totalDeposit / 2) {
             return res.status(400).json({
@@ -54,7 +60,11 @@ const loanController={
               amount: true,
             },
           });
+          console.log(totalDepositAmount);
+          
       const totalDeposit:any=totalDepositAmount._sum.amount;
+      console.log(totalDeposit);
+
           // Check if new loan amount exceeds half of total deposit amount
           if (data.amount > totalDeposit/ 2) {
             return res.status(400).json({
@@ -63,6 +73,7 @@ const loanController={
             });
           }
         }
+      
       
         const newLoan = await prisma.loans.create({
           data: {
