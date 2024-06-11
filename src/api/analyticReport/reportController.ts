@@ -16,40 +16,20 @@ const reportController={
             },
             _sum: {
               amount: true,
+              commission:true,
+              remaining:true,
             },
           });
-          const totalRemainingAmount = await prisma.deposits.aggregate({
-            where: {
-              createdAt: {
-                gte: new Date(`${req.body.date}T00:00:00.000Z`),
-                lt: new Date(`${req.body.date}T23:59:59.999Z`),
-              },
-            },
-            _sum: {
-              remaining: true,
-            },
-          });
-          const totalCommission = await prisma.deposits.aggregate({
-            where: {
-              createdAt: {
-                gte: new Date(`${req.body.date}T00:00:00.000Z`),
-                lt: new Date(`${req.body.date}T23:59:59.999Z`),
-              },
-            },
-            _sum: {
-              commission: true,
+           
+           return res.status(200).json({
+            success: true,
+            message: 'daily deposit',
+            data: {
+              totalDeposit: totalDepositAmount._sum.amount,
+              totalRemaining: totalDepositAmount._sum.remaining,
+              totalCommission: totalDepositAmount._sum.commission,
             },
           });
-          
-  return res.status(200).json({
-    success: true,
-    message: 'daily deposit',
-    data: {
-      totalDeposit: totalDepositAmount._sum.amount,
-      totalRemaining: totalRemainingAmount._sum.remaining,
-      totalCommission: totalCommission._sum.commission,
-    },
-  });
         },
 //  getWeekly: async (req: Request, res: Response, next: NextFunction) => {
 //         const currentDate = new Date(`${req.body.date}T00:00:00.000Z`);
