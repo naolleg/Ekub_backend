@@ -6,8 +6,8 @@ import  errorHandler  from "../../middlewares/error.js";
 const reportRouter = Router();
 
 
-reportRouter.get('/DailyReport',errorHandler(reportController.getDaily))
-reportRouter.get('/MonthlyReport',errorHandler(reportController.getMonthly))
-reportRouter.get('/weeklyReport',errorHandler(reportController.getWeekly))
+reportRouter.post('/DailyReport',errorHandler(reportController.getDaily))
+reportRouter.post('/MonthlyReport',errorHandler(reportController.getMonthly))
+reportRouter.post('/weeklyReport',errorHandler(reportController.getWeekly))
 
 export default reportRouter;
