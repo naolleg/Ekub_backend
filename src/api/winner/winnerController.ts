@@ -28,6 +28,12 @@ const winnerController = {
         message: "winner is already registered",
       });
     }
+    if(isLotExist.isCompleted == false){
+      return res.status(404).json({
+        success: false,
+        message: "the lot didn't complete his payment",
+      });
+    }
 
     const newWinner = await prisma.winners.create({
       data: {
@@ -42,9 +48,21 @@ const winnerController = {
     });
   },
   update: async (req: Request, res: Response, next: NextFunction) => {
+    
     const data = winnerSchema.register.parse(req.body);
     const id = req.params.id;
     //check if the winner exist
+    const isLotExist = await prisma.lots.findFirst({
+      where: {
+        id: +data.lotId,
+      },
+    });
+    if (!isLotExist) {
+      return res.status(404).json({
+        success: false,
+        message: "lot not found",
+      });
+    }
     const isWinnerExist = await prisma.winners.findFirst({
       where: {
         id: +id,
@@ -54,6 +72,12 @@ const winnerController = {
       return res.status(404).json({
         success: false,
         message: "winner not found",
+      });
+    }
+    if(isLotExist.isCompleted == false){
+      return res.status(404).json({
+        success: false,
+        message: "the lot didn't complete his payment",
       });
     }
     const updatedWinner = await prisma.winners.update({
@@ -69,6 +93,7 @@ const winnerController = {
     return res.status(200).json({
       success: true,
       message: "winner updated sucessfully",
+      updatedWinner
     });
 
    
