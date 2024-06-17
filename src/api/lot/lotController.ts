@@ -155,6 +155,16 @@ const lotController={
             message: "lot successfully deleted",
         })
     },
+    getAll:async(req: Request,res: Response,next: NextFunction)=>{
+
+        try {
+            const category= await prisma.lots.findMany()
+            res.status(200).json({ success: true,
+              message: "all lots",category});
+          } catch (error) {
+            throw(error);
+          }
+        },
 
 }
 
