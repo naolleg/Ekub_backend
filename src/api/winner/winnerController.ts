@@ -124,6 +124,30 @@ const winnerController = {
         message: 'winner deleted sucessfully',
     })
   },
+  getAll:async(req: Request,res: Response,next: NextFunction)=>{
+
+    try {
+        const users= await prisma.winners.findMany({
+          include: {
+            lot:{
+              include:{
+                profile:{
+                 select:{
+                  firstName:true,
+                  lastName:true
+                 }
+                }
+
+              }
+            }
+          }
+    })
+        res.status(200).json({ success: true,
+          message: "all Users",users});
+      } catch (error) {
+        throw(error);
+      }
+    },
 };
 
 export default winnerController;

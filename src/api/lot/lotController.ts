@@ -155,16 +155,25 @@ const lotController={
             message: "lot successfully deleted",
         })
     },
-    getAll:async(req: Request,res: Response,next: NextFunction)=>{
-
+    getAll: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const lots= await prisma.lots.findMany()
-            res.status(200).json({ success: true,
-              message: "all lots",lots});
-          } catch (error) {
-            throw(error);
-          }
-        },
+          const lots = await prisma.lots.findMany({
+            include: {
+              profile: {
+                select: {
+                  firstName: true,
+                  middleName:true,
+                  lastName:true,
+                  address:true
+                },
+              },
+            },
+          });
+          res.status(200).json({ success: true, message: "all lots", lots });
+        } catch (error) {
+          throw error;
+        }
+      },
 
 }
 

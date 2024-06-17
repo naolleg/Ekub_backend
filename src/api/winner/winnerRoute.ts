@@ -6,4 +6,5 @@ const winnerRouter = Router();
 winnerRouter.post('/register',[isAuthUser],errorHandler(winnerController.register));
 winnerRouter.put('/update/:id',[isAuthUser],errorHandler(winnerController.update));
 winnerRouter.delete('/delete/:id',[isAuthUser],errorHandler(winnerController.delete));
+winnerRouter.get('/getAll',[isAuthUser],errorHandler(winnerController.getAll))
 export default winnerRouter;
