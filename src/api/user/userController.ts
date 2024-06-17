@@ -240,5 +240,15 @@ const userController = {
       data: updateUser,
     });
   },
+  getAll:async(req: Request,res: Response,next: NextFunction)=>{
+
+    try {
+        const users= await prisma.users.findMany()
+        res.status(200).json({ success: true,
+          message: "all Users",users});
+      } catch (error) {
+        throw(error);
+      }
+    },
 };
 export default userController;

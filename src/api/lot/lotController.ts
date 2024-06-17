@@ -158,9 +158,9 @@ const lotController={
     getAll:async(req: Request,res: Response,next: NextFunction)=>{
 
         try {
-            const category= await prisma.lots.findMany()
+            const lots= await prisma.lots.findMany()
             res.status(200).json({ success: true,
-              message: "all lots",category});
+              message: "all lots",lots});
           } catch (error) {
             throw(error);
           }

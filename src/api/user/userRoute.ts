@@ -4,6 +4,7 @@ import errorHandler from "../../middlewares/error.js";
 const userRouter = Router();
 
 
+userRouter.get('/getAll',errorHandler(userController.getAll));
 userRouter.post('/login',errorHandler(userController.login));
 userRouter.put('/change-password/:id',errorHandler(userController.changePassword));
 userRouter.put('/reset-password',errorHandler(userController.resetPassword));
