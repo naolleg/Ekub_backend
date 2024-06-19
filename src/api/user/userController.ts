@@ -110,10 +110,17 @@ const userController = {
     }
     console.log("sdfvsf");
    const data = userSchema.changePassword.parse(req.body);
-    if (data.password != data.cpassword) {
+   if(user.password!=data.password){
+    return res.status(404).json({
+      success: false,
+      message: "the current password is wrong",
+    });
+
+   }
+    if (data.newpassword != data.conformpassword) {
       return res.status(404).json({
         success: false,
-        message: "password not match",
+        message: "new passwords does not match",
       });
     }
     

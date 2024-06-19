@@ -17,8 +17,8 @@ const userSchema = {
   }),
   changePassword:z.object({
     password: z.string().min(6),
-    cpassword: z.string().min(6),
-    
+    newpassword: z.string().min(6),
+    conformpassword:z.string().min(6)
   }),
   updateUserInfo: z.object({
     firstName: z.string().min(1),
