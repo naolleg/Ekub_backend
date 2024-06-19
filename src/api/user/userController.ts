@@ -110,13 +110,12 @@ const userController = {
     }
     console.log("sdfvsf");
    const data = userSchema.changePassword.parse(req.body);
-   if(user.password!=data.password){
+   if (!bcrypt.compareSync(data.password, user.password)) {
     return res.status(404).json({
       success: false,
-      message: "the current password is wrong",
+      message: "password is incorrect",
     });
-
-   }
+  }
     if (data.newpassword != data.conformpassword) {
       return res.status(404).json({
         success: false,
@@ -125,13 +124,13 @@ const userController = {
     }
     
     const salt = bcrypt.genSaltSync(10);
-    const password = bcrypt.hashSync(req.body.password, salt);
+    const newpassword = bcrypt.hashSync(data.newpassword, salt);
     const updateUser = await prisma.users.update({
       where: {
         id: user!.id,
       },
       data: {
-        password: password,
+        password: newpassword,
       },
     });
 
